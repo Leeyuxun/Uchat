@@ -27,13 +27,14 @@ def run(sc, parameters):
     #用户ip获取，命名证书，获取信息更新证书，服务端证书也会用自己的个人信息更新
     ip =str(parameters[3])
     certname = ip + "_cert.pem"
-    with open(certname, 'rb') as f:
+    with open(certname, 'r') as f:
         context = f.read()
-        sp = context.split()
+        sp = context.split(' ')
         f.close()
-    with open(certname,'wb') as f:
-        f.write((str(parameters[0]) + ' ' +str(parameters[2]) + " " + str(sp[2])).encode())
+    with open(certname,'w') as f:
+        f.write((str(parameters[0]) + ' ' +str(parameters[2]) + " " + str(sp[2])))
         f.close()
+
 
     c = database.get_cursor()
     c.execute('INSERT into users (username,password,email,ip,port,sex,age) values (?,?,?,?,?,?,?)',
