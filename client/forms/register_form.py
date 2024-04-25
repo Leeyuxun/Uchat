@@ -171,14 +171,16 @@ class RegisterForm(tk.Frame):
         self.sc.send(MessageType.register, [username, password, email, ip, port, sex, age])
 
         certname = ip + "_cert.pem"
-        with open(certname, 'rb') as f:
+        with open(certname, 'r') as f:
             context = f.read()
-            sp = context.split()
+            # print('before read is', context)
+            sp = context.split(' ')
             f.close()
-        with open(certname,'wb') as f:
-            f.write((str(self.var_user_name.get()) + ' ' + str(self.var_user_email.get()) + " " + str(sp[2])).encode())
+        with open(certname,'w') as f:
+            f.write((str(self.var_user_name.get()) + ' ' + str(self.var_user_email.get()) + " " + str(sp[2])))
             f.close()
-        #with open(certname, "rb") as f:
-            #a = f.read()
-           # print("content_after_write!!!:is:", a)
-            #f.close()
+        # with open(certname, "r") as f:
+        #     a = f.read()
+        #     print("content_after_write!!!:is:", a)
+        #     f.close()
+
