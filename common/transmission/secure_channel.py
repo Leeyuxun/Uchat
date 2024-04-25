@@ -46,8 +46,23 @@ class SecureChannel:
         # pprint(['sending', self.socket, message_type, parameters])
         mac = hashlib.md5(encrypted_message).hexdigest().encode()
 
-        self.socket.send(
-            struct.pack('!L', length_of_encrypted_message) + bytes([padding_n]) + iv1 + mac + encrypted_message)
+        message=struct.pack('!L', length_of_encrypted_message) + bytes([padding_n]) + iv1 + mac + encrypted_message
+        msglen=len(message)
+        
+        # print(['sending', self.socket, message_type, parameters])
+
+        totalsent=0
+        while totalsent < msglen:
+            try:
+                sent = self.socket.send(message[totalsent:])
+            except BlockingIOError as e:
+                # sleep(0.05)
+                continue
+            print('sending', msglen, 'Bytes, this time',sent,'Bytes')
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
+            totalsent = totalsent + sent
+            
         return
 
     def on_data(self, data_array):
